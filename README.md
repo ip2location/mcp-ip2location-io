@@ -2,6 +2,7 @@
 
 This is a simple Model Context Protocol (MCP) server implementation for IP2Location.io API. It will return a detailed geolocation information for any given IPv4 or IPv6 address.
 
+[![Trust Score](https://archestra.ai/mcp-catalog/api/badge/quality/ip2location/mcp-ip2location-io)](https://archestra.ai/mcp-catalog/ip2location__mcp-ip2location-io)
 <a href="https://glama.ai/mcp/servers/@ip2location/mcp-ip2location-io">
   <img width="380" height="200" src="https://glama.ai/mcp/servers/@ip2location/mcp-ip2location-io/badge" />
 </a>
