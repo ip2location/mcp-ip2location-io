@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "description": "IP Geolocation MCP server that query the geolocation information using IP2Location.io API.",
   "long_description": "This is a simple Model Context Protocol (MCP) server implementation for IP2Location.io API. It will return geolocation information for an IP address, such as country, region, city, coordinates and so on.",
-  "keywords": ["IP", "geolocation", "IP locator", "python", "IP info"],
+  "keywords": ["mcp", "model-context-protocol", "IP", "geolocation", "IP locator", "python", "IP info"],
   "license": "MIT",
   "author": {
     "name": "IP2Location.io",
@@ -13,6 +13,7 @@
     "url": "https://github.com/ip2location"
   },
   "homepage": "https://github.com/ip2location/mcp-ip2location-io",
+  "documentation": "https://www.ip2location.io/documentation",
   "icon": "icon.png",
   "screenshots": [
     "example.png"
@@ -21,7 +22,7 @@
     "type": "python",
     "entry_point": "src/server.py",
     "mcp_config": {
-      "command": "uv",
+      "command": "ux",
       "args": [
             "--directory",
             "${__dirname}/src",
@@ -36,8 +37,17 @@
   "tools": [
     {
       "name": "get_geolocation",
-      "description": "Fetch geolocation information for the given IPv4 or IPv6 address."
-    }
+      "description": "Fetch geolocation information for the given IPv4 or IPv6 address.",
+      "inputSchema": {
+          "type": "object",
+          "properties": {
+            "ip": {
+              "type": "string",
+              "description": "The IPv4 or IPv6 address to lookup."
+            }
+          }
+        }
+      }
   ],
   "compatibility": {
     "claude_desktop": ">=0.10.0",
@@ -54,5 +64,9 @@
       "sensitive": true,
       "required": false
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ip2location-com/mcp-ip2location-io"
   }
 }
