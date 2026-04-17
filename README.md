@@ -49,7 +49,7 @@ Follow the steps to use this MCP server with Claude Desktop:
 ```
  6. Remember to replace the `/path/to/ip2locationio`  path with your actual path to IP2Location.io MCP server in local.
  7. To get your API key, just [login](https://www.ip2location.io/log-in) to your dashboard and get it from there. Replaced the `<YOUR API key HERE>` in above with your actual API key.
- 8. Restart the Claude Desktop after save the changes, and you should see it appear in the `Search and tools` menu.
+ 8. Restart the Claude Desktop after save the changes, and you should see it appear in the `Connectors` menu.
 
 # Usage
 
@@ -65,6 +65,11 @@ For instance, below is the result of the IP 8.8.8.8:
 
 In Claude Desktop, the model will automatically generate the output based on the result returned by IP2Location.io MCP server.
 
+You can also utilize IP2Location.io Bulk IP Geolocation API to query for multiple IP addresses. Just input all IP addresses with the space in between of each IP address. For example `8.8.8.8 8.8.6.6`.
+
+> [!NOTE]  
+> IP2Location.io Bulk IP Geolocation API requires a paid plan to work.
+
 # Environment Variable
 
 `IP2LOCATION_API_KEY`
@@ -76,22 +81,22 @@ The IP2Location.io API key, which allows you to query up to 50,000 per month and
 `get_geolocation`
 
 **Description**
-Fetch geolocation for the given IP address. It helps users to retrieve detailed information such as country, region, city, latitude, longitude, ZIP code, time zone, ASN, and proxy information for any IPv4 or IPv6 address.
+Fetch geolocation for the given IP address or a batch of IP addresses. It helps users retrieve detailed information such as country, region, city, latitude, longitude, ZIP code, time zone, ASN, and proxy information for any IPv4 or IPv6 address. It automatically routes requests to the IP2Location.io Bulk API for efficient processing when multiple IPs are detected.
 
 **Arguments**
-ip (str): The IP address (IPv4 or IPv6) to analyze.
+- `ip` (str): The IP address (IPv4 or IPv6) to analyze. You can query multiple IPs at once by passing them as a single string separated by commas, spaces, or newlines (e.g., `"1.1.1.1, 2.2.2.2"`).
 
 **Returns**
-A JSON string containing the geolocation data. The result may include the following fields, depending on your API plan:
+A JSON string containing the geolocation data. If multiple IPs are queried, it returns a JSON object where each key is an IP address mapped to its respective data. The result may include the following fields, depending on your API plan:
 
-- Location & Geography: Country, region, district, city, ZIP code, latitude & longitude, time zone.
-- Network & Connectivity: ASN (Autonomous System Number), ISP (Internet Service Provider), domain, net speed, IDD code, area code, address type, usage type.
-- Mobile Information: MNC (Mobile Network Code), MCC (Mobile Country Code), Mobile Brand.
-- Currency & Language: currency code, currency name, currency symbol, language code, language name.
-- Proxy & Security: proxy type, last seen, threat level/type, proxy provider, fraud score.
-- Others: IAB category, weather, elevation, population, and more.
+- **Location & Geography:** Country, region, district, city, ZIP code, latitude & longitude, time zone.
+- **Network & Connectivity:** ASN (Autonomous System Number), ISP (Internet Service Provider), domain, net speed, IDD code, area code, address type, usage type.
+- **Mobile Information:** MNC (Mobile Network Code), MCC (Mobile Country Code), Mobile Brand.
+- **Currency & Language:** currency code, currency name, currency symbol, language code, language name.
+- **Proxy & Security:** proxy type, last seen, threat level/type, proxy provider, fraud score.
+- **Others:** IAB category, weather, elevation, population, and more.
 
-If the request fails or the IP address is invalid, the tool will return an error message as a string.
+If a single IP request fails or the IP is invalid, the tool returns an error message as a string. For bulk requests, any individual failed IPs will return an error object mapped to that specific IP address without failing the entire batch.
 # License
 
 See the LICENSE file.

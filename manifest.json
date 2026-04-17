@@ -2,7 +2,7 @@
   "dxt_version": "0.1",
   "name": "ip2locationio",
   "display_name": "IP2Location.io MCP Server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "IP Geolocation MCP server that query the geolocation information using IP2Location.io API.",
   "long_description": "This is a simple Model Context Protocol (MCP) server implementation for IP2Location.io API. It will return geolocation information for an IP address, such as country, region, city, coordinates and so on.",
   "keywords": ["mcp", "model-context-protocol", "IP", "geolocation", "IP locator", "python", "IP info"],
