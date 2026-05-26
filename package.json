@@ -1,0 +1,24 @@
+{
+  "name": "mcp-ip2location-io",
+  "version": "1.1.1",
+  "description": "IP Geolocation MCP server that query the geolocation information using IP2Location.io API.",
+  "license": "MIT",
+  "author": {
+    "name": "IP2Location.io",
+    "email": "support@ip2location.io",
+    "url": "https://github.com/ip2location"
+  },
+  "homepage": "https://github.com/ip2location/mcp-ip2location-io",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "IP",
+    "geolocation",
+    "IP locator",
+    "python",
+    "IP info"
+  ],
+  "scripts": {
+    "start": "uv --directory ./src run server.py"
+  }
+}

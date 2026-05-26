@@ -2,9 +2,7 @@
 
 This is a simple Model Context Protocol (MCP) server implementation for IP2Location.io API. It will return a detailed geolocation information for any given IPv4 or IPv6 address.
 
-<a href="https://glama.ai/mcp/servers/@ip2location-com/mcp-ip2location-io">
-  <img width="380" height="200" src="https://glama.ai/mcp/servers/@ip2location-com/mcp-ip2location-io/badge" />
-</a>
+[![mcp-ip2location-io MCP server](https://glama.ai/mcp/servers/ip2location/mcp-ip2location-io/badges/score.svg)](https://glama.ai/mcp/servers/ip2location/mcp-ip2location-io)
 
 # Features
 
@@ -59,22 +57,18 @@ Follow the steps below to use the cloud-hosted IP2Location.io MCP server with Cl
 
 Follow the steps below if you want to run the original MCP server locally with Claude Desktop:
 
-1. Download the repository to your local machine.
-2. Set up the `uv` package manager. You can refer to [the guide](https://modelcontextprotocol.io/quickstart/server#set-up-your-environment) to do so.
-3. Make sure you have installed Claude Desktop. If you have not installed it yet, download it from [here](https://claude.ai/download) for Windows and macOS, or follow [this guide](https://modelcontextprotocol.io/quickstart/client) for Linux users.
-4. Open the `claude_desktop_config.json` file in your choice of editor. If you do not have one yet, follow [this guide](https://modelcontextprotocol.io/quickstart/server#testing-your-server-with-claude-for-desktop) to create one.
-5. Add the following to your `claude_desktop_config.json`:
+1. Set up the `uv` package manager. You can refer to [the guide](https://modelcontextprotocol.io/quickstart/server#set-up-your-environment) to do so.
+2. Make sure you have installed Claude Desktop. If you have not installed it yet, download it from [here](https://claude.ai/download) for Windows and macOS, or follow [this guide](https://modelcontextprotocol.io/quickstart/client) for Linux users.
+3. Open the `claude_desktop_config.json` file in your choice of editor. If you do not have one yet, follow [this guide](https://modelcontextprotocol.io/quickstart/server#testing-your-server-with-claude-for-desktop) to create one.
+4. Add the following to your `claude_desktop_config.json`:
 
 ```json
 {
   "mcpServers": {
     "ip2locationio": {
-      "command": "uv",
+      "command": "uvx",
       "args": [
-        "--directory",
-        "/path/to/ip2locationio/src",
-        "run",
-        "server.py"
+        "mcp-ip2location-io"
       ],
       "env": {
         "IP2LOCATION_API_KEY": "<YOUR API key HERE>"
@@ -84,9 +78,8 @@ Follow the steps below if you want to run the original MCP server locally with C
 }
 ```
 
-6. Replace `/path/to/ip2locationio` with the actual path to the IP2Location.io MCP server on your local machine.
-7. To get your API key, [log in](https://www.ip2location.io/log-in) to your dashboard. Replace `<YOUR API key HERE>` in the example above with your actual API key.
-8. Restart Claude Desktop after saving the changes, and you should see it appear in the `Connectors` menu.
+5. To get your API key, [log in](https://www.ip2location.io/log-in) to your dashboard. Replace `<YOUR API key HERE>` in the example above with your actual API key.
+6. Restart Claude Desktop after saving the changes, and you should see it appear in the `Connectors` menu.
 
 # Usage
 
@@ -137,3 +130,5 @@ If a single IP request fails or the IP is invalid, the tool returns an error mes
 # License
 
 See the LICENSE file.
+
+<!-- mcp-name: io.github.ip2location/mcp-ip2location-io -->

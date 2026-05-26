@@ -1,6 +1,6 @@
 [project]
-name = "ip2locationio"
-version = "1.0.1"
+name = "mcp-ip2location-io"
+version = "1.1.1"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
@@ -8,3 +8,8 @@ dependencies = [
     "httpx>=0.28.1",
     "mcp[cli]>=1.9.4",
 ]
+license = "MIT"
+license-files = ["LICENSE.TXT"]
+
+[project.scripts]
+mcp-ip2location-io = "ip2locationio.server:main"
