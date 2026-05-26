@@ -4,6 +4,8 @@ This is a simple Model Context Protocol (MCP) server implementation for IP2Locat
 
 [![mcp-ip2location-io MCP server](https://glama.ai/mcp/servers/ip2location/mcp-ip2location-io/badges/score.svg)](https://glama.ai/mcp/servers/ip2location/mcp-ip2location-io)
 
+[![Trust Score](https://archestra.ai/mcp-catalog/api/badge/quality/ip2location/mcp-ip2location-io)](https://archestra.ai/mcp-catalog/ip2location__mcp-ip2location-io)
+
 # Features
 
 - **Comprehensive Geolocation Data**: Retrieves a wide range of information, including country, region, city, latitude, longitude, ZIP code, time zone, and more.
