@@ -185,7 +185,7 @@ Do not commit your API key to a public Git repository.
 ## `get_geolocation`
 
 **Description**
-Fetch geolocation for the given IP address or a batch of IP addresses. It helps users retrieve detailed information such as country, region, city, latitude, longitude, ZIP code, time zone, ASN, and proxy information for any IPv4 or IPv6 address. It automatically routes requests to the IP2Location.io Bulk API for efficient processing when multiple IPs are detected.
+- Fetch geolocation for the given IP address or a batch of IP addresses. It helps users retrieve detailed information such as country, region, city, latitude, longitude, ZIP code, time zone, ASN, and proxy information for any IPv4 or IPv6 address. It automatically routes requests to the IP2Location.io Bulk API for efficient processing when multiple IPs are detected.
 
 **Arguments**
 - `ip` (`str`): One IPv4 or IPv6 address, or multiple IP addresses separated by commas, spaces, or new lines.
@@ -200,6 +200,7 @@ Multiple IP example:
 
 ```text
 1.1.1.1, 8.8.8.8, 9.9.9.9
+```
 
 **Return value**
 A JSON string containing the geolocation data. If multiple IPs are queried, it returns a JSON object where each key is an IP address mapped to its respective data. 
