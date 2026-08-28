@@ -121,10 +121,6 @@ Follow these steps if you prefer to run the MCP server locally.
 Once the MCP server is connected, ask your MCP client questions about an IPv4 or IPv6 address using natural language.
 Just enter your query about the IP in a chat in Claude Desktop. 
 
-- 
-- 
-- 
-
  ### IP geolocation
 
 ```text
