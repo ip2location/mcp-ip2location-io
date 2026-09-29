@@ -6,12 +6,12 @@
     "url": "https://github.com/ip2location/mcp-ip2location-io",
     "source": "github"
   },
-  "version": "1.1.1",
+  "version": "1.1.2",
   "packages": [
     {
       "registryType": "pypi",
       "identifier": "mcp-ip2location-io",
-      "version": "1.1.1",
+      "version": "1.1.2",
       "transport": {
         "type": "stdio"
       },

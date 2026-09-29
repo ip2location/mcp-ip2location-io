@@ -1,12 +1,20 @@
 from typing import Any, Dict
 import httpx
-from mcp.server.fastmcp import FastMCP
 import os
 import re
 import json
+ 
+# --- MCP SDK compatibility (v1 and v2) -------------------------------------
+# v2 renamed FastMCP -> MCPServer and moved it to mcp.server.mcpserver.
+# The old mcp.server.fastmcp module no longer exists in v2, so try v2 first
+# and fall back to the v1 name.
+try:
+    from mcp.server.mcpserver import MCPServer  # MCP Python SDK v2
+except ImportError:
+    from mcp.server.fastmcp import FastMCP as MCPServer  # MCP Python SDK v1
 
 # Initialize FastMCP server
-mcp = FastMCP("ip2locationio")
+mcp = MCPServer("ip2locationio")
 
 # Constants
 IPLIO_API_BASE = "https://api.ip2location.io"
