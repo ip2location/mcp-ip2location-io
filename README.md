@@ -149,6 +149,120 @@ Follow these steps if you prefer to run the MCP server locally.
 5. To get your API key, [log in](https://www.ip2location.io/log-in) to your dashboard. Replace `<YOUR API key HERE>` in the example above with your actual API key.
 6. Restart Claude Desktop after saving the changes, and you should see it appear in the `Connectors` menu.
 
+# Framework Integration
+
+The MCP server can also be used from Python agent frameworks. The examples below connect to the hosted server over HTTP. To use the local server instead, connect with the stdio command `uvx` and the argument `mcp-ip2location-io`, and pass `IP2LOCATION_API_KEY` as an environment variable.
+
+Each example reads the API key from the `IP2LOCATION_API_KEY` environment variable, so the key never appears in your source code.
+
+## LangChain
+
+LangChain includes MCP support in the `langchain.mcp` namespace, which requires LangChain 1.4 or later.
+
+```bash
+pip install "langchain[mcp]" langchain-anthropic
+```
+
+```python
+import asyncio
+import os
+
+from fastmcp.client.transports import StreamableHttpTransport
+from langchain.agents import create_agent
+from langchain.mcp import MCPAdapter
+
+async def main():
+    transport = StreamableHttpTransport(
+        "https://mcp.ip2location.io/",
+        headers={"X-API-Key": os.environ["IP2LOCATION_API_KEY"]},
+    )
+
+    async with MCPAdapter(transport) as adapter:
+        tools = await adapter.list_tools()
+
+        agent = create_agent("anthropic:claude-sonnet-5", tools)
+        result = await agent.ainvoke({"messages": "Where is 8.8.8.8 located?"})
+        print(result["messages"][-1].content)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+`MCPAdapter` accepts the server URL directly, but the `StreamableHttpTransport` object is passed here so the `X-API-Key` header can be set.
+
+## LlamaIndex
+
+```bash
+pip install llama-index-tools-mcp llama-index-llms-openai
+```
+
+```python
+import asyncio
+import os
+
+from llama_index.core.agent.workflow import FunctionAgent
+from llama_index.llms.openai import OpenAI
+from llama_index.tools.mcp import BasicMCPClient, McpToolSpec
+
+async def main():
+    client = BasicMCPClient(
+        "https://mcp.ip2location.io/",
+        headers={"X-API-Key": os.environ["IP2LOCATION_API_KEY"]},
+    )
+
+    tools = await McpToolSpec(client=client).to_tool_list_async()
+
+    agent = FunctionAgent(
+        tools=tools,
+        llm=OpenAI(model="gpt-5-mini"),
+        system_prompt="You are a helpful assistant that looks up IP addresses.",
+    )
+
+    response = await agent.run("Where is 8.8.8.8 located?")
+    print(response)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+## CrewAI
+
+CrewAI reads MCP servers from the `mcps` field on an agent. This requires the `mcp` package to be installed alongside CrewAI.
+
+```bash
+pip install crewai mcp
+```
+
+```python
+import os
+
+from crewai import Agent, Crew, Process, Task
+from crewai.mcp import MCPServerHTTP
+
+ip_agent = Agent(
+    role="IP Intelligence Analyst",
+    goal="Look up geolocation and network information for an IP address.",
+    backstory="An analyst who checks IP addresses against IP2Location.io.",
+    mcps=[
+        MCPServerHTTP(
+            url="https://mcp.ip2location.io/",
+            headers={"X-API-Key": os.environ["IP2LOCATION_API_KEY"]},
+        )
+    ],
+)
+
+task = Task(
+    description="Find the geolocation of 8.8.8.8 and summarize the result.",
+    expected_output="A short summary of the IP address location and network data.",
+    agent=ip_agent,
+)
+
+crew = Crew(agents=[ip_agent], tasks=[task], process=Process.sequential)
+print(crew.kickoff())
+```
+
+On CrewAI versions that do not support the `mcps` field, install `crewai-tools[mcp]` and wrap the server with `MCPServerAdapter` from `crewai_tools` instead.
+
 # Usage
 
 Once the MCP server is connected, ask your MCP client questions about an IPv4 or IPv6 address using natural language.
