@@ -32,11 +32,16 @@ There are two ways to use this MCP server.
 
 Recommended when you want to connect directly to the hosted IP2Location.io MCP server.
 
+You can connect in either of two ways:
+
+- **Direct HTTP connection**: Your MCP client supports remote (streamable HTTP) MCP servers. No extra software is required.
+- **Via `npx`**: Your MCP client only supports local (stdio) servers. This uses the `mcp-remote` package to bridge to the hosted server.
+
 You need:
 
 - An MCP-compatible client such as Claude Desktop
-- Node.js / `npx`
 - An IP2Location.io API key
+- Node.js / `npx` (only for the `npx` connection method)
 
 ### Local MCP server
 
@@ -66,7 +71,35 @@ Follow these steps to connect Claude Desktop to the hosted IP2Location.io MCP se
 
 1. Make sure you have installed Claude Desktop. If you have not installed it yet, download it from [here](https://claude.ai/download) for Windows and macOS, or follow [this guide](https://modelcontextprotocol.io/quickstart/client) for Linux users.
 2. Open the `claude_desktop_config.json` file in your choice of editor. If you do not have one yet, follow [this guide](https://modelcontextprotocol.io/quickstart/server#testing-your-server-with-claude-for-desktop) to create one.
-3. Add the following to your `claude_desktop_config.json`:
+3. Add one of the configurations below, depending on how you want to connect.
+
+### Method A: Direct HTTP connection
+
+Use this if your MCP client supports remote servers over HTTP. No Node.js or `npx` is needed.
+
+```json
+{
+  "mcpServers": {
+    "ip2location": {
+      "type": "http",
+      "url": "https://mcp.ip2location.io/",
+      "headers": {
+        "X-API-Key": "YOUR_API_KEY"
+      }
+    }
+  }
+}
+```
+
+If your client is configured from the command line, such as Claude Code, you can add the server with:
+
+```bash
+claude mcp add --transport http ip2location https://mcp.ip2location.io/ --header "X-API-Key: YOUR_API_KEY"
+```
+
+### Method B: Connection through `npx`
+
+Use this if your MCP client only supports local (stdio) servers. The `mcp-remote` package runs locally and forwards requests to the hosted server.
 
 ```json
 {
