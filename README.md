@@ -10,6 +10,8 @@ This makes it useful for IP investigation, network troubleshooting, traffic anal
 
 [![Trust Score](https://archestra.ai/mcp-catalog/api/badge/quality/ip2location/mcp-ip2location-io)](https://archestra.ai/mcp-catalog/ip2location__mcp-ip2location-io)
 
+[![IP2Location IO MCP on mcprush](https://mcprush.com/badge/ip2location-io-mcp/score.svg)](https://mcprush.com/to/ip2location-io-mcp?ref=badge)
+
 # Features
 
 - **Comprehensive Geolocation Data**: Retrieve country, region, city, ZIP/postal code, latitude, longitude, time zone, and other location information.
