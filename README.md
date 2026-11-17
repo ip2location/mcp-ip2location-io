@@ -1,83 +1,37 @@
-# IP2Location.io MCP server
+# IP2Location.io MCP Server
 
-IP2Location.io MCP Server is a Model Context Protocol (MCP) server that enables MCP-compatible AI clients to perform IP address geolocation and network intelligence lookups using the IP2Location.io API.
+[![MCP server on Glama](https://glama.ai/mcp/servers/ip2location/mcp-ip2location-io/badges/score.svg)](https://glama.ai/mcp/servers/ip2location/mcp-ip2location-io)
 
-Give it an IPv4 or IPv6 address and the MCP server can retrieve information such as geographic location, ASN, ISP, domain, network type, and proxy information, depending on your IP2Location.io API plan.
+An [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server for looking up IPv4 and IPv6 geolocation and network intelligence using the [IP2Location.io API](https://www.ip2location.io/). Connect it to an MCP-compatible AI client to investigate IP addresses in natural language.
 
-This makes it useful for IP investigation, network troubleshooting, traffic analysis, localization, security analysis, and enriching IP addresses found in logs or other datasets.
+## Features
 
-[![mcp-ip2location-io MCP server](https://glama.ai/mcp/servers/ip2location/mcp-ip2location-io/badges/score.svg)](https://glama.ai/mcp/servers/ip2location/mcp-ip2location-io)
+- **IP geolocation:** Country, region, city, coordinates, ZIP/postal code and time zone.
+- **Network intelligence:** ASN, AS name, ISP, domain, connection speed, usage type and other connection attributes.
+- **Security signals:** Proxy, VPN, Tor, threat and fraud-related data on eligible plans.
+- **IPv4 and IPv6:** Single-IP and multi-IP lookup support.
+- **Bulk lookups:** Attempts the Bulk API for multiple IPs, with fallback to individual lookups if the bulk request fails.
+- **Asynchronous Requests:** Uses httpx for asynchronous API requests.
 
-[![Trust Score](https://archestra.ai/mcp-catalog/api/badge/quality/ip2location/mcp-ip2location-io)](https://archestra.ai/mcp-catalog/ip2location__mcp-ip2location-io)
+> Data availability depends on your [IP2Location.io plan](https://www.ip2location.io/pricing). Get an [API key](https://www.ip2location.io/sign-up) before configuring the server.
 
-[![IP2Location IO MCP on mcprush](https://mcprush.com/badge/ip2location-io-mcp/score.svg)](https://mcprush.com/to/ip2location-io-mcp?ref=badge)
+## Quick start
+There are **two ways to use this MCP server**:
 
-# Features
+1. **Cloud-hosted MCP server**: Connect to the hosted endpoint without running the server locally. Use direct HTTP or an `npx` bridge, depending on your MCP client.
+2. **Local-hosted MCP server**: Run the server on your own machine using `uvx`.
 
-- **Comprehensive Geolocation Data**: Retrieve country, region, city, ZIP/postal code, latitude, longitude, time zone, and other location information.
-- **ASN Lookup**: Identify the Autonomous System Number (ASN) and Autonomous System (AS) associated with an IP address.
-- **Network Intelligence**: Retrieve information such as ISP, domain, connection speed, usage type, and other network attributes depending on your plan.
-- **Proxy and Security Information**: Detect proxy-related information and, on supported plans, additional VPN, Tor, data center, threat, and fraud information.
-- **IPv4 and IPv6 Support**: Query both IPv4 and IPv6 addresses.
-- **Bulk IP Lookup**: Send multiple IP addresses in one prompt and automatically use the IP2Location.io Bulk API when available.
-- **MCP Integration**: Use IP intelligence directly from MCP-compatible AI applications.
-- **Asynchronous Requests**: Uses `httpx` for asynchronous API requests.
+Choose the connection method supported by your MCP client:
 
-> [!NOTE]
-> The fields returned by IP2Location.io depend on your API subscription plan.
+| Method | Best for | Requirements |
+| --- | --- | --- |
+| Cloud-hosted: Direct HTTP | Clients supporting remote MCP over HTTP | MCP client, API key |
+| Cloud-hosted: `npx` bridge | Clients supporting stdio only | Node.js, `npx`, API key |
+| Local-hosted: `uvx` | Running the MCP server on your machine | Python 3.13+, `uv`, API key |
 
-## Requirements
+### Method 1: Cloud-Hosted server — Direct HTTP Connection
 
-There are two ways to use this MCP server.
-
-### Cloud-hosted MCP server
-
-Recommended when you want to connect directly to the hosted IP2Location.io MCP server.
-
-You can connect in either of two ways:
-
-- **Direct HTTP connection**: Your MCP client supports remote (streamable HTTP) MCP servers. No extra software is required.
-- **Via `npx`**: Your MCP client only supports local (stdio) servers. This uses the `mcp-remote` package to bridge to the hosted server.
-
-You need:
-
-- An MCP-compatible client such as Claude Desktop
-- An IP2Location.io API key
-- Node.js / `npx` (only for the `npx` connection method)
-
-### Local MCP server
-
-Use this option when you want to run the MCP server locally.
-
-You need:
-
-- Python 3.13 or later
-- `uv`
-- An MCP-compatible client such as Claude Desktop
-- An IP2Location.io API key
-
-You can sign up for a free IP2Location.io API key. The Free plan provides up to **50,000 IP Geolocation API queries per month**.
-
-The underlying IP2Location.io REST API also supports limited keyless access of up to **1,000 queries per day**. For this MCP server, configuring an API key is recommended and is used in the setup examples below.
-
-# Setup
-
-You can use this MCP server in Claude Desktop in either of the following ways:
-
-- **Cloud-hosted MCP server**: Recommended if you want to connect directly to the hosted IP2Location.io MCP server.
-- **Local MCP server**: Use this if you want to download and run the original MCP server on your own machine.
-
-## Option 1: Cloud-hosted MCP server
-
-Follow these steps to connect Claude Desktop to the hosted IP2Location.io MCP server.
-
-1. Make sure you have installed Claude Desktop. If you have not installed it yet, download it from [here](https://claude.ai/download) for Windows and macOS, or follow [this guide](https://modelcontextprotocol.io/quickstart/client) for Linux users.
-2. Open the `claude_desktop_config.json` file in your choice of editor. If you do not have one yet, follow [this guide](https://modelcontextprotocol.io/quickstart/server#testing-your-server-with-claude-for-desktop) to create one.
-3. Add one of the configurations below, depending on how you want to connect.
-
-### Method A: Direct HTTP connection
-
-Use this if your MCP client supports remote servers over HTTP. No Node.js or `npx` is needed.
+For clients that support remote MCP servers, configure:
 
 ```json
 {
@@ -93,15 +47,17 @@ Use this if your MCP client supports remote servers over HTTP. No Node.js or `np
 }
 ```
 
-If your client is configured from the command line, such as Claude Code, you can add the server with:
+For Claude Code, you can alternatively run:
 
 ```bash
 claude mcp add --transport http ip2location https://mcp.ip2location.io/ --header "X-API-Key: YOUR_API_KEY"
 ```
 
-### Method B: Connection through `npx`
+> Client configuration formats vary. Use the remote-server configuration supported by your MCP client.
 
-Use this if your MCP client only supports local (stdio) servers. The `mcp-remote` package runs locally and forwards requests to the hosted server.
+### Method 2: Cloud-hosted server — `npx` bridge
+
+For stdio-only clients, connect to the hosted service using [`mcp-remote`](https://www.npmjs.com/package/mcp-remote):
 
 ```json
 {
@@ -120,46 +76,126 @@ Use this if your MCP client only supports local (stdio) servers. The `mcp-remote
 }
 ```
 
-4. Replace `YOUR_API_KEY` with your actual IP2Location.io API key. To get your API key, [log in](https://www.ip2location.io/log-in) to your dashboard.
-5. Restart Claude Desktop after saving the changes, and you should see the MCP server appear in the `Connectors` menu.
+### Method 3: Local-hosted server — `uvx` 
 
-## Option 2: Local MCP server
-
-Follow these steps if you prefer to run the MCP server locally.
-
-1. Set up the `uv` package manager. You can refer to [the guide](https://modelcontextprotocol.io/quickstart/server#set-up-your-environment) to do so.
-2. Make sure you have installed Claude Desktop. If you have not installed it yet, download it from [here](https://claude.ai/download) for Windows and macOS, or follow [this guide](https://modelcontextprotocol.io/quickstart/client) for Linux users.
-3. Open the `claude_desktop_config.json` file in your choice of editor. If you do not have one yet, follow [this guide](https://modelcontextprotocol.io/quickstart/server#testing-your-server-with-claude-for-desktop) to create one.
-4. Add the following to your `claude_desktop_config.json`:
+Install [`uv`](https://docs.astral.sh/uv/) and use this configuration in a stdio-compatible MCP client:
 
 ```json
 {
   "mcpServers": {
-    "ip2locationio": {
+    "ip2location": {
       "command": "uvx",
-      "args": [
-        "mcp-ip2location-io"
-      ],
+      "args": ["mcp-ip2location-io"],
       "env": {
-        "IP2LOCATION_API_KEY": "<YOUR API key HERE>"
+        "IP2LOCATION_API_KEY": "YOUR_API_KEY"
       }
     }
   }
 }
 ```
 
-5. To get your API key, [log in](https://www.ip2location.io/log-in) to your dashboard. Replace `<YOUR API key HERE>` in the example above with your actual API key.
-6. Restart Claude Desktop after saving the changes, and you should see it appear in the `Connectors` menu.
+Replace `YOUR_API_KEY` with your key and reload or restart the MCP client. For Claude Desktop, edit `claude_desktop_config.json` using the [MCP client setup guide](https://modelcontextprotocol.io/quickstart/user).
 
-# Framework Integration
+**Authentication:** The hosted connection uses the `X-API-Key` HTTP header; the local Python server reads the `IP2LOCATION_API_KEY` environment variable. Never commit keys to a repository or print them in logs.
 
-The MCP server can also be used from Python agent frameworks. The examples below connect to the hosted server over HTTP. To use the local server instead, connect with the stdio command `uvx` and the argument `mcp-ip2location-io`, and pass `IP2LOCATION_API_KEY` as an environment variable.
+## Usage Examples
+Once connected, ask your MCP client:
 
-Each example reads the API key from the `IP2LOCATION_API_KEY` environment variable, so the key never appears in your source code.
+| Use case | Example prompt |
+| --- | --- |
+| Geolocation | `Where is 8.8.8.8 located?` |
+| Coordinates | `What are the latitude and longitude of 1.1.1.1?` |
+| ASN and network | `Who operates the network for 8.8.8.8?` |
+| Proxy/security | `Is 8.8.8.8 identified as a proxy?` |
+| Bulk lookup | `Look up 8.8.8.8, 1.1.1.1, and 9.9.9.9.` |
 
-## LangChain
+![Example IP geolocation lookup for 8.8.8.8](example.png)
 
-LangChain includes MCP support in the `langchain.mcp` namespace, which requires LangChain 1.4 or later.
+For multiple addresses, separate IPs using commas, spaces, or new lines. The server attempts the [Bulk IP Geolocation API](https://www.ip2location.io/ip2location-bulk-documentation) where available. **Bulk API access requires an eligible paid plan.**
+
+## MCP tool reference
+
+### `get_geolocation`
+
+Looks up one or more IPv4/IPv6 addresses.
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `ip` | `string` | One IP address, or multiple addresses separated by commas, spaces or newlines. |
+
+**Examples**
+
+```text
+8.8.8.8
+1.1.1.1, 8.8.8.8, 9.9.9.9
+```
+
+**Output:** JSON-formatted geolocation and network intelligence. For multiple IPs, results are mapped by IP address; per-IP errors can be included without losing other results. Failed single-IP lookups return an error message.
+
+| Data category | Examples of available fields |
+| --- | --- |
+| Geography | Country, region, district, city, ZIP/postal code, coordinates, time zone |
+| Network | ASN, ISP, domain, connection speed, usage type, address type |
+| Autonomous System | AS name, domain, CIDR, usage type |
+| Mobile | MCC, MNC, carrier brand |
+| Localization | Currency and language information |
+| Proxy and security | Proxy type/status, provider, threat indicators, fraud score |
+| Other | IAB category, weather, elevation, population |
+
+> [!IMPORTANT]
+> Not every field appears in every response. Field availability depends on the subscription and data coverage.
+
+## Understanding ASN Lookup
+
+An **Autonomous System Number (ASN)** is a unique number assigned to an Autonomous System (AS), a network or group of IP networks managed under a common routing policy.
+
+ASN lookup helps developers identify the network operator associated with an IP address. It is useful for network troubleshooting, traffic analysis, security investigations, and identifying hosting providers.
+
+### What Information Does ASN Lookup Provide?
+
+IP2Location.io provides ASN information alongside IP geolocation data.
+
+| Field | Description |
+|---|---|
+| ASN | Autonomous System Number associated with the IP address |
+| AS Name | Name of the organization operating the network |
+| AS Domain | Domain associated with the Autonomous System |
+| AS Usage Type | Classification of the Autonomous System's usage |
+| AS CIDR | Associated IP address range in CIDR notation |
+
+**Note:** Basic ASN and AS name information is available with the Free API plan. Additional AS information depends on the subscription plan.
+
+### ASN Lookup Using the MCP Server
+
+Once connected to the IP2Location.io MCP server, you can perform ASN lookups using natural-language prompts:
+
+- `What is the ASN of 8.8.8.8?`
+- `Which organization operates 1.1.1.1?`
+- `Show the ASN and network information for 8.8.8.8.`
+- `Compare the network operators of 8.8.8.8 and 1.1.1.1.`
+
+The MCP server uses the `get_geolocation` tool to retrieve available ASN and network information from the IP2Location.io API.
+
+### Other ASN Lookup Options
+
+For applications that require direct API access or local ASN lookups, consider:
+
+- **[IP2Location.io API](https://www.ip2location.io/)** — Retrieve ASN and geolocation data through REST API requests.
+- **[IP2Location ASN LITE](https://www.ip2location.com/database/lite)** — Free downloadable ASN database for local IP-to-ASN lookups.
+
+## Framework Integration
+
+The IP2Location.io MCP server supports MCP-compatible agent frameworks, including **LangChain**, **LlamaIndex**, and **CrewAI**.
+
+You can connect using either method:
+
+- **Cloud-hosted:** Connect to `https://mcp.ip2location.io/` over HTTP and authenticate using the `X-API-Key` request header.
+- **Local-hosted:** Run `uvx mcp-ip2location-io` with the `IP2LOCATION_API_KEY` environment variable configured.
+
+The following examples demonstrate cloud-hosted integration with Python agent frameworks. Set the `IP2LOCATION_API_KEY` environment variable before running them. Depending on the framework, an additional LLM provider API key may be required.
+### LangChain
+
+Requires LangChain 1.4+ with MCP support.
 
 ```bash
 pip install "langchain[mcp]" langchain-anthropic
@@ -178,10 +214,8 @@ async def main():
         "https://mcp.ip2location.io/",
         headers={"X-API-Key": os.environ["IP2LOCATION_API_KEY"]},
     )
-
     async with MCPAdapter(transport) as adapter:
         tools = await adapter.list_tools()
-
         agent = create_agent("anthropic:claude-sonnet-5", tools)
         result = await agent.ainvoke({"messages": "Where is 8.8.8.8 located?"})
         print(result["messages"][-1].content)
@@ -190,9 +224,7 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-`MCPAdapter` accepts the server URL directly, but the `StreamableHttpTransport` object is passed here so the `X-API-Key` header can be set.
-
-## LlamaIndex
+### LlamaIndex
 
 ```bash
 pip install llama-index-tools-mcp llama-index-llms-openai
@@ -211,15 +243,12 @@ async def main():
         "https://mcp.ip2location.io/",
         headers={"X-API-Key": os.environ["IP2LOCATION_API_KEY"]},
     )
-
     tools = await McpToolSpec(client=client).to_tool_list_async()
-
     agent = FunctionAgent(
         tools=tools,
         llm=OpenAI(model="gpt-5-mini"),
         system_prompt="You are a helpful assistant that looks up IP addresses.",
     )
-
     response = await agent.run("Where is 8.8.8.8 located?")
     print(response)
 
@@ -227,9 +256,7 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-## CrewAI
-
-CrewAI reads MCP servers from the `mcps` field on an agent. This requires the `mcp` package to be installed alongside CrewAI.
+### CrewAI
 
 ```bash
 pip install crewai mcp
@@ -252,422 +279,88 @@ ip_agent = Agent(
         )
     ],
 )
-
 task = Task(
     description="Find the geolocation of 8.8.8.8 and summarize the result.",
     expected_output="A short summary of the IP address location and network data.",
     agent=ip_agent,
 )
-
 crew = Crew(agents=[ip_agent], tasks=[task], process=Process.sequential)
 print(crew.kickoff())
 ```
 
-On CrewAI versions that do not support the `mcps` field, install `crewai-tools[mcp]` and wrap the server with `MCPServerAdapter` from `crewai_tools` instead.
+> For CrewAI versions without the `mcps` field, the original project also describes `crewai-tools[mcp]` with `MCPServerAdapter` as an alternative. Framework APIs can change; check the corresponding framework documentation when upgrading dependencies.
 
-# Usage
+## Troubleshooting
 
-Once the MCP server is connected, ask your MCP client questions about an IPv4 or IPv6 address using natural language.
-Just enter your query about the IP in a chat in Claude Desktop. 
+| Problem | What to check |
+| --- | --- |
+| Server not listed | Validate your MCP client configuration and restart or reconnect the client. |
+| `npx` or `uvx` not found | Install the required runtime and check your `PATH`. |
+| Authentication error | Check the API key and use `X-API-Key` for hosted HTTP or `IP2LOCATION_API_KEY` locally. |
+| Bulk lookup unavailable | Check paid-plan access; the server may fall back to individual lookups. |
+| Missing response fields | Fields vary by API plan and IP address. |
+| Lookup failed | Check network access, available API quota and whether the IP address is valid. |
 
- ### IP geolocation
+## API Keys and Plans
 
-```text
-Where is the location of (IP)?
-```
+- **Free API key:** The original documentation lists up to **50,000 IP Geolocation API queries/month**, with basic geography, ASN, and proxy data.
+- **Keyless REST API:** The underlying IP2Location.io REST API has limited keyless access (the original documentation lists **1,000 requests/day**). This is **not** a substitute for the MCP configurations above, which use an API key.
+- **Paid plans:** Higher query allowances and additional fields such as ISP, usage type, detailed ASN, VPN/Tor/data center signals, threat intelligence, and fraud score. Bulk lookups require an eligible plan.
 
-```text
-Where is (IP) located?
-```
+See [pricing and limits](https://www.ip2location.io/pricing) and [API documentation](https://www.ip2location.io/ip2location-documentation) for current entitlements. Free-plan attribution or other terms may apply.
 
-```text
-What is the latitude and longitude of (IP)?
-```
+## Frequently Asked Questions
 
-For instance, below is the result of the IP 8.8.8.8:
+### What is an IP geolocation API used for?
 
-![The output of the IP 8.8.8.8](example.png "The output of the IP 8.8.8.8")
+It maps IP addresses to approximate geographic and network attributes. Typical uses include localization, traffic analytics, log enrichment, network troubleshooting, login context, and security investigations. This MCP server makes those lookups available through natural-language prompts.
 
-In Claude Desktop, the model will automatically generate the output based on the result returned by IP2Location.io MCP server.
+### Are there free IP geolocation services?
 
-### Proxy and security lookup
+Yes.
+[IP2Location.io](https://www.ip2location.io/) offers a free API plan for cloud lookups. The IP2Location.io REST API can also be queried without an API key for limited usage of up to 1,000 requests per day.
 
-Depending on the IP2Location.io plan being used:
+[IP2Location LITE](https://www.ip2location.com/database/lite) offers downloadable databases for applications that prefer **local IP geolocation lookups without an external API request**. It is a good starting point for developers looking for a free, locally hosted IP geolocation solution.
 
-```text
-Is this IP address a proxy: 8.8.8.8?
-```
+### Can this server tell me my own public IP address?
 
-### Multiple IP addresses
+The **IP2Location.io REST API** can look up the requesting public IP when its `ip` parameter is omitted. However, this MCP server's `get_geolocation` tool expects an IP address; it is intended primarily for addresses provided in a prompt. Do not assume the remote MCP endpoint identifies the end user's device IP.
 
-You can also utilize IP2Location.io Bulk IP Geolocation API to query for multiple IP addresses.
+### Can an IP address be used to track a person?
 
-```text
-Look up 8.8.8.8 8.8.6.6 9.9.9.9
-```
+Applications may log IP addresses over time and enrich them with location or ASN data, but **this server does not continuously monitor IPs**, and an IP address does not reliably identify a person or their exact location. Shared networks, NAT, VPNs, mobile carriers, and proxies affect interpretation.
 
-The MCP server detects multiple IP addresses and sends them to the IP2Location.io Bulk API when possible.
+### What is ASN lookup, and when should I use it?
 
-IP addresses can be separated by commas, spaces, or new lines.
+An **Autonomous System Number (ASN)** identifies a network operated under a common routing policy. ASN and AS-name lookup helps identify network operators (for example, `8.8.8.8` is commonly associated with **AS15169, Google LLC**). Use it for traffic grouping, network investigations, and troubleshooting.
 
+### Should I use IP intelligence, WHOIS/RDAP, or BGP tools?
 
+| Need | Best fit |
+| --- | --- |
+| Approximate geography, ISP, ASN, and proxy data | IP intelligence API such as IP2Location.io |
+| IP block registration and registry contacts | WHOIS or RDAP |
+| Route announcements, prefixes, paths, and peering | BGP routing tools |
 
-> [!NOTE]  
-> IP2Location.io Bulk IP Geolocation API access requires an eligible paid plan.
+These approaches complement each other rather than providing identical data.
 
-# Environment Variable
+### How accurate is IP geolocation?
 
-## `IP2LOCATION_API_KEY`
+It is an **estimate, not GPS**. Country-level location is generally more reliable than city-level or coordinate-level location. VPNs, proxies, corporate gateways, carrier-grade NAT, cloud infrastructure, and address reassignment can affect results. Do not use IP coordinates as proof of a user's precise location.
 
-Your IP2Location.io API key `IP2LOCATION_API_KEY`.
+### Why are some fields missing, or why does a bulk request fail?
 
-The Free plan currently provides up to **50,000 IP Geolocation API queries per month** and access to basic IP information.
-
-Paid plans provide higher query quotas and additional attributes. 
-
-You can [sign up](https://www.ip2location.io/sign-up) for a free API key, or [subscribe higher plan](https://www.ip2location.io/pricing) for comprehensive geo-ip data.
-
-Do not commit your API key to a public Git repository.
-
-# MCP Tool
-
-## `get_geolocation`
-
-**Description**
-- Fetch geolocation for the given IP address or a batch of IP addresses. It helps users retrieve detailed information such as country, region, city, latitude, longitude, ZIP code, time zone, ASN, and proxy information for any IPv4 or IPv6 address. It automatically routes requests to the IP2Location.io Bulk API for efficient processing when multiple IPs are detected.
-
-**Arguments**
-- `ip` (`str`): One IPv4 or IPv6 address, or multiple IP addresses separated by commas, spaces, or new lines.
-
-Single IP example:
-
-```text
-8.8.8.8
-```
-
-Multiple IP example:
-
-```text
-1.1.1.1, 8.8.8.8, 9.9.9.9
-```
-
-**Return value**
-A JSON string containing the geolocation data. If multiple IPs are queried, it returns a JSON object where each key is an IP address mapped to its respective data. 
-
-Depending on your API plan, returned information can include:
-
-| Category | Possible information |
-|---|---|
-| Location & Geography | Country, region, district, city, ZIP code, latitude, longitude, time zone |
-| Network & Connectivity | ASN, ISP, domain, net speed, IDD code, area code, address type, usage type |
-| Autonomous System | ASN, AS name and, on supported plans, AS domain, AS CIDR and AS usage type |
-| Mobile | MCC, MNC, mobile brand |
-| Currency & Language | Currency code/name/symbol and language information |
-| Proxy & Security | Proxy status/type, provider, last seen, threat information and fraud score |
-| Other Data | IAB category, weather information, elevation, population and other plan-dependent data |
-
-If a single IP request fails or the IP is invalid, the tool returns an error message as a string. For bulk requests, any individual failed IPs will return an error object mapped to that specific IP address without failing the entire batch.
-
-
-
-# Common Questions
-
-## Can you recommend free IP geolocation services?
-
-Yes. IP2Location.com and IP2Location.io provide free access or free tiers.
-
-### IP2Location.io
-
-IP2Location.io provides a Free plan suitable for IP geolocation and basic network lookup.
-
-The Free plan includes up to **50,000 IP Geolocation API queries per month** and provides basic information including:
-
-- IP address
-- Country
-- Region
-- City
-- ZIP/postal code
-- Latitude and longitude
-- Time zone
-- ASN
-- AS name
-- Basic proxy detection
-
-The IP2Location.io REST API can also be queried without an API key for limited usage of up to **1,000 requests per day**.
-
-The Free plan requires attribution. Check the IP2Location.io pricing page for current limits and conditions.
-
-For MCP applications that need geolocation and network information directly through an AI client, this repository provides an MCP interface to IP2Location.io.
-
-### IP2Location.com LITE
-[IP2Location LITE](https://www.ip2location.com/database/lite) provides free IP geolocation databases that developers can download and integrate directly into their applications. Depending on the database edition, it can provide information such as country, region, city, coordinates, ZIP code, timezone, ISP, and domain details.
-
-Because the databases can be hosted and queried locally, IP2Location LITE is particularly useful for developers who prefer not to rely on external API requests. It is available in multiple formats and supports IPv4 and IPv6 data.
-
-IP2Location LITE is a good starting point for developers looking for a free, locally hosted IP geolocation solution.
-
-## What are IP Geolocation APIs and Services?
-
-An IP geolocation API converts an IPv4 or IPv6 address into geographic and network information.
-
-For example, an application can send:
-
-```text
-8.8.8.8
-```
-
-and receive information such as:
-
-- Country
-- Region or state
-- City
-- ZIP/postal code
-- Latitude and longitude
-- Time zone
-- ASN
-- ISP
-- Domain
-- Network usage type
-- Proxy information
-
-The exact fields depend on the service and subscription level.
-
-### Common uses of IP geolocation APIs
-
-IP geolocation can be useful for:
-
-- Website and application localization
-- Regional content selection
-- Traffic analytics
-- Network troubleshooting
-- Security investigation
-- Fraud-risk analysis
-- Login and authentication context
-- Server log enrichment
-- IP address research
-
-This MCP server makes these lookups accessible through natural-language prompts instead of requiring the user to construct REST API requests manually.
-
-## Can IP addresses be tracked?
-
-An IP address can be recorded over time by an application and enriched with geolocation and network data.
-
-For example, a security application might record IP addresses from login events and use an IP intelligence service to identify:
-
-- Approximate country or city
-- ASN
-- ISP
-- Network operator
-- Proxy status
-- Changes in network or geographic region
-
-This can help investigate traffic patterns or unusual network activity.
-
-However, IP geolocation is **not precise person or device tracking**.
-
-An IP address may belong to:
-
-- A shared household connection
-- A corporate gateway
-- A mobile carrier
-- A VPN
-- A proxy
-- A cloud provider
-- A data center
-- A NAT gateway shared by many users
-
-Latitude and longitude returned by an IP geolocation service are approximate geographic coordinates and should not be interpreted as GPS coordinates, a street address, or proof of an individual's physical location.
-
-This MCP server performs IP address lookups. It does not continuously monitor or track IP addresses by itself.
-
-## Can I use IP2Location.io as a "my IP address" API?
-
-Yes, the IP2Location.io REST API supports this type of use case.
-
-Normally, an IP address is passed to the API:
-
-```text
-?ip=8.8.8.8
-```
-
-If the `ip` parameter is omitted from a direct IP2Location.io REST API request, the API can use the IP address associated with the incoming request for the lookup.
-
-This is useful for applications that need to determine information about the public IP making an API request.
-
-Typical "my IP" data can include:
-
-- Public IP address
-- Country
-- Region
-- City
-- Coordinates
-- ZIP/postal code
-- Time zone
-- ASN
-
-The `get_geolocation` MCP tool in this repository expects an IP address as its argument, so MCP usage is primarily designed for looking up an IP address supplied in the conversation.
-
-## What tools are best for ASN and IP address lookup?
-
-The best tool depends on the information you need.
-
-### IP2Location.io
-
-IP2Location.io is useful when you need both **ASN information and IP geolocation** from the same lookup.
-
-Basic lookup information includes:
-
-- ASN
-- Autonomous System name
-
-Higher-level IP2Location.io data can additionally include:
-
-- AS number
-- AS name
-- AS domain
-- AS CIDR
-- AS usage type
-
-Through this MCP server, you may ask:
-
-```text
-What is the ASN of 8.8.8.8?
-```
-
-or:
-
-```text
-Tell me who operates the network for 8.8.8.8 and where the IP is located.
-```
-
-### RDAP and WHOIS
-
-RDAP and WHOIS services are useful when you need registration information about IP address blocks and organizations.
-
-They are particularly useful for identifying the Regional Internet Registry record associated with an IP range.
-
-### BGP tools
-
-BGP looking glasses and routing-analysis services are more appropriate when you need information about:
-
-- Route announcements
-- Prefixes
-- BGP paths
-- Peering
-- Routing changes
-- Which ASN is currently announcing a network
-
-### IP intelligence APIs
-
-IP intelligence services are preferable when an application needs structured information that combines several datasets, such as:
-
-- Geolocation
-- ASN
-- ISP
-- Proxy detection
-- VPN detection
-- Network classification
-- Security data
-
-For MCP users who want geolocation and ASN information in the same workflow, this project provides a convenient interface to IP2Location.io.
-
-## Understanding ASN Lookup
-
-An **Autonomous System Number (ASN)** identifies an Autonomous System: a network or collection of IP prefixes operated under a common routing policy.
-
-Examples of organizations with ASNs include:
-
-- Internet service providers
-- Cloud hosting providers
-- Content delivery networks
-- Universities
-- Large enterprises
-- Telecommunications companies
-
-ASN information can be useful when investigating an IP because it can reveal which network is responsible for routing that address.
-
-For example:
-
-```text
-8.8.8.8
-```
-
-is associated with:
-
-```text
-ASN: 15169
-AS: Google LLC
-```
-
-ASN lookup is commonly used for:
-
-- Network troubleshooting
-- Security investigations
-- Traffic analysis
-- Identifying hosting providers
-- Grouping traffic by network
-- Investigating suspicious IP addresses
-
-## IP Geolocation Accuracy and Limitations
-
-IP geolocation provides an **estimated geographic location** based on network and IP allocation information.
-
-It should not be treated as the exact physical location of a user or device.
-
-Accuracy can be affected by:
-
-- VPNs
-- Proxy servers
-- Mobile networks
-- Corporate networks
-- Carrier-grade NAT
-- Satellite connections
-- Cloud infrastructure
-- ISP routing and address allocation changes
-
-Country-level results are generally more reliable than exact city or coordinate-level results.
-
-Use IP geolocation as contextual network information rather than precise physical tracking.
-
-## IP2Location.io Plans
-
-The amount of information returned depends on the IP2Location.io plan.
-
-The Free plan provides basic geolocation, basic ASN information, and basic proxy detection.
-
-Higher-level plans can provide additional information such as:
-
-- ISP
-- Domain
-- Network speed
-- Usage type
-- Mobile network information
-- Detailed Autonomous System information
-- Detailed proxy information
-- VPN detection
-- Tor detection
-- Data center detection
-- Threat information
-- Fraud score
-- Additional geolocation attributes
-
-For the latest query limits, fields, and pricing, refer to:
-
-- [IP2Location.io Pricing](https://www.ip2location.io/pricing)
-- [IP2Location.io API Documentation](https://www.ip2location.io/ip2location-documentation)
+Check the API subscription, quota, and data coverage. Bulk endpoint access requires an eligible paid plan; single-IP and bulk failures may also reflect invalid addresses, connectivity, or API errors.
 
 ## Resources
 
-- [IP2Location.io](https://www.ip2location.io/)
-- [IP2Location.io API Documentation](https://www.ip2location.io/ip2location-documentation)
-- [IP2Location.io Pricing](https://www.ip2location.io/pricing)
-- [IP2Location.io Bulk IP Geolocation API](https://www.ip2location.io/bulk-ip-geolocation)
+- [IP2Location.io API documentation](https://www.ip2location.io/ip2location-documentation)
+- [Plans and pricing](https://www.ip2location.io/pricing)
+- [Bulk IP Geolocation API](https://www.ip2location.io/ip2location-bulk-documentation)
+- [Report an issue](https://github.com/ip2location/mcp-ip2location-io/issues)
 
-# License
+## License
 
-See the `LICENSE.TXT` file.
-
+MIT — see [LICENSE.TXT](LICENSE.TXT).
 
 <!-- mcp-name: io.github.ip2location/mcp-ip2location-io -->
-
-
